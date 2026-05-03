@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactNode } from 'react'
+import { useState, type ComponentProps, type ReactNode } from 'react'
 import { ExternalLink } from 'lucide-react'
 import { GithubMark, LinkedinMark, XMark } from '@/components/brand-icons'
 import { GithubContributionGraph } from '@/components/portfolio/github-contribution-graph'
@@ -30,25 +30,47 @@ function SectionLabel({ children }: { children: ReactNode }) {
   )
 }
 
-function LogoMark({
+function HeroAvatar({
+  mystic,
   className,
-  decorative = false,
 }: {
+  mystic: boolean
   className?: string
-  decorative?: boolean
 }) {
   return (
-    <img
-      src={site.identity.photo.src}
-      alt={decorative ? '' : site.identity.photo.alt}
-      width={192}
-      height={192}
-      decoding="async"
+    <div
       className={cn(
-        'shrink-0 rounded-full border-2 border-primary/45 object-cover shadow-[0_0_28px_-10px_oklch(0.78_0.12_195_/_0.55)]',
+        'relative shrink-0 overflow-hidden rounded-full border-2 border-primary/45 shadow-[0_0_28px_-10px_oklch(0.78_0.12_195_/_0.55)]',
         className,
       )}
-    />
+    >
+      <img
+        src={site.identity.photo.src}
+        alt=""
+        width={192}
+        height={192}
+        decoding="async"
+        className={cn(
+          'absolute inset-0 size-full object-cover',
+          mystic
+            ? 'opacity-0 transition-opacity duration-[900ms] ease-[cubic-bezier(0.4,0,0.2,1)]'
+            : 'opacity-100 transition-none duration-0',
+        )}
+      />
+      <img
+        src={site.identity.photo.mysticSrc}
+        alt=""
+        width={192}
+        height={192}
+        decoding="async"
+        className={cn(
+          'absolute inset-0 size-full object-cover',
+          mystic
+            ? 'opacity-100 transition-opacity duration-[1100ms] ease-out delay-150'
+            : 'opacity-0 transition-none duration-0',
+        )}
+      />
+    </div>
   )
 }
 
@@ -66,6 +88,9 @@ function GlowCard({ className, ...props }: ComponentProps<typeof Card>) {
 
 function App() {
   const showProjects = site.projects.length > 0
+  const [hoverMystic, setHoverMystic] = useState(false)
+  const [focusMystic, setFocusMystic] = useState(false)
+  const mystic = hoverMystic || focusMystic
 
   return (
     <div className="relative flex h-svh max-h-svh w-full flex-col overflow-hidden">
@@ -78,20 +103,53 @@ function App() {
           <div className="mx-auto w-full max-w-[min(100%,2400px)]">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(300px,26%)] lg:items-start lg:gap-10">
               {/* Profile: logo left, copy right; full width of column */}
-              <div className="flex min-w-0 w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
+              <div
+                className="flex min-w-0 w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-8"
+                onMouseEnter={() => setHoverMystic(true)}
+                onMouseLeave={() => setHoverMystic(false)}
+              >
                 <div className="flex shrink-0 justify-start sm:pt-0.5">
-                  <LogoMark
-                    decorative
-                    className="size-40 rounded-full object-cover sm:size-44 lg:size-48"
+                  <HeroAvatar
+                    mystic={mystic}
+                    className="size-40 sm:size-44 lg:size-48"
                   />
                 </div>
                 <div className="min-w-0 flex-1 space-y-4 text-left">
                   <h1
                     id="hero-heading"
                     className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl sm:text-nowrap lg:text-5xl"
+                    aria-label={`${site.identity.name}, ${site.identity.moniker}`}
                   >
-                    <span className="bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
-                      {site.identity.name}
+                    <span
+                      tabIndex={0}
+                      onFocus={() => setFocusMystic(true)}
+                      onBlur={() => setFocusMystic(false)}
+                      className={cn(
+                        'relative isolate inline-grid auto-cols-max cursor-default rounded-sm outline-none',
+                        'place-items-start focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          'col-start-1 row-start-1 z-10 inline-block bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent',
+                          mystic
+                            ? 'opacity-0 blur-[8px] transition-[opacity,filter] duration-[850ms] ease-[cubic-bezier(0.4,0,0.2,1)]'
+                            : 'opacity-100 blur-0 transition-none',
+                        )}
+                      >
+                        {site.identity.name}
+                      </span>
+                      <span
+                        className={cn(
+                          'col-start-1 row-start-1 z-20 inline-block whitespace-nowrap bg-gradient-to-r from-primary via-foreground to-primary bg-clip-text text-transparent',
+                          mystic
+                            ? 'opacity-100 blur-0 tracking-[0.08em] drop-shadow-[0_0_20px_oklch(0.72_0.14_195_/_0.45)] transition-[opacity,filter,letter-spacing] duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] delay-[200ms]'
+                            : 'pointer-events-none opacity-0 blur-[10px] tracking-normal drop-shadow-none transition-none',
+                        )}
+                        aria-hidden
+                      >
+                        {site.identity.moniker}
+                      </span>
                     </span>
                   </h1>
                   <p className="text-base text-primary sm:text-lg sm:text-nowrap">

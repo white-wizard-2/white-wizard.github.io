@@ -272,12 +272,14 @@ export const site = {
   },
   identity: {
     name: 'Vinod Balakrishnan',
+    moniker: 'White Wizard',
     headline: 'Software engineer',
     about:
       'I love video. I love software. I love learning systems.',
     photo: {
       src: '/vinod.png',
       alt: 'Vinod Balakrishnan',
+      mysticSrc: '/whitewizard.jpg',
     },
   },
   links: [
