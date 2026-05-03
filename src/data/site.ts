@@ -43,17 +43,17 @@ const experience = [
     roles: [
       {
         title: 'Principal Software Engineer',
-        employmentType: 'Full-time',
+        employmentType: '',
         period: 'Oct 2025 – Present · 8 mos',
         location: 'London Area, United Kingdom',
-        arrangement: 'On-site',
+        arrangement: '',
       },
       {
         title: 'Senior Software Engineer',
-        employmentType: 'Full-time',
+        employmentType: '',
         period: 'Jan 2023 – Oct 2025 · 2 yrs 10 mos',
         location: 'Greater London, England, United Kingdom',
-        arrangement: 'Hybrid',
+        arrangement: '',
       },
       {
         title: 'Engineering Manager - India',

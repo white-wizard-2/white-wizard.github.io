@@ -14,6 +14,31 @@ const surfaceCard = cn(
   'border-border/80 bg-card/60 shadow-[0_0_0_1px_oklch(1_0_0_/_6%)_inset] backdrop-blur-xl',
 )
 
+function TimelineConnector({ index, total }: { index: number; total: number }) {
+  const isFirst = index === 0
+  const isLast = index === total - 1
+
+  return (
+    <div
+      className="relative flex h-9 items-center justify-center"
+      aria-hidden
+    >
+      {!isFirst ? (
+        <div className="absolute right-1/2 left-0 top-1/2 z-0 h-px -translate-y-1/2 bg-primary/45" />
+      ) : null}
+      <span
+        className={cn(
+          'relative z-[1] size-2.5 shrink-0 rounded-full border-2 border-primary/80 bg-primary/20',
+          'shadow-[0_0_0_3px_oklch(0.72_0.14_195_/_0.12),0_0_14px_oklch(0.72_0.14_195_/_0.25)]',
+        )}
+      />
+      {!isLast ? (
+        <div className="absolute left-1/2 right-0 top-1/2 z-0 h-px -translate-y-1/2 bg-primary/45" />
+      ) : null}
+    </div>
+  )
+}
+
 function RoleBlock({ role, isFirst }: { role: ExperienceRole; isFirst: boolean }) {
   const detail = [role.employmentType, role.period].filter(Boolean).join(' · ')
   const where = [role.location, role.arrangement].filter(Boolean).join(' · ')
@@ -106,12 +131,26 @@ export function ExperienceCareerPanel({
         )}
         style={{
           gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`,
+          gridTemplateRows: 'auto minmax(0, 1fr)',
         }}
       >
         {companies.map((company, index) => (
           <div
+            key={`tl-${company.id}`}
+            className={cn(
+              'border-b border-border/80 bg-card/30 px-2',
+              index < n - 1 && 'border-r border-border/80',
+            )}
+            style={{ gridColumn: index + 1, gridRow: 1 }}
+          >
+            <TimelineConnector index={index} total={n} />
+          </div>
+        ))}
+        {companies.map((company, index) => (
+          <div
             key={company.id}
             className={cn('min-h-0 min-w-0', index < n - 1 && 'border-r border-border/80')}
+            style={{ gridColumn: index + 1, gridRow: 2 }}
           >
             <ExperienceColumn company={company} />
           </div>
