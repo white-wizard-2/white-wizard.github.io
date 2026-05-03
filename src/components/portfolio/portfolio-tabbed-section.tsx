@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react'
 import { ExternalLink } from 'lucide-react'
+import { ExperienceCareerPanel } from '@/components/portfolio/experience-career-panel'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -43,7 +44,7 @@ export function PortfolioTabbedSection() {
       aria-label="Portfolio workspace"
     >
       <div className="mx-auto w-full min-w-0 max-w-[min(100%,2400px)]">
-        <div className="min-w-0 max-w-full overflow-hidden rounded-lg bg-card/35 backdrop-blur-md">
+        <div className="min-w-0 max-w-full rounded-lg bg-card/35 backdrop-blur-md">
           <Tabs defaultValue="experience">
             <TabsList aria-label="Portfolio categories">
               <TabsTrigger value="experience">Experience</TabsTrigger>
@@ -64,50 +65,7 @@ export function PortfolioTabbedSection() {
                   under <code className="font-mono text-[0.7rem]">experience</code>.
                 </EmptyHint>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-left text-sm">
-                    <thead>
-                      <tr className="border-b border-border/60 font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
-                        <th className="pb-3 pr-4 font-medium">Period</th>
-                        <th className="pb-3 pr-4 font-medium">Role</th>
-                        <th className="pb-3 font-medium">Notes</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-muted-foreground">
-                      {site.experience.map((row) => (
-                        <tr
-                          key={`${row.organization}-${row.title}-${row.period}`}
-                          className="border-b border-border/40 last:border-0"
-                        >
-                          <td className="py-3 pr-4 align-top font-mono text-xs text-primary/90 whitespace-nowrap">
-                            {row.period}
-                          </td>
-                          <td className="py-3 pr-4 align-top text-foreground">
-                            <div className="font-medium">{row.title}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {row.organization}
-                            </div>
-                          </td>
-                          <td className="py-3 align-top">
-                            {row.href ? (
-                              <a
-                                href={row.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                              >
-                                {row.summary ?? 'Link'}
-                                <ExternalLink className="size-3 shrink-0 opacity-70" />
-                              </a>
-                            ) : (
-                              row.summary ?? '—'
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <ExperienceCareerPanel companies={site.experience} />
               )}
             </TabsContent>
 

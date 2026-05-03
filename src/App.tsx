@@ -68,8 +68,8 @@ function App() {
   const showProjects = site.projects.length > 0
 
   return (
-    <div className="relative flex min-h-svh w-full flex-col overflow-x-hidden">
-      <main className="flex flex-1 flex-col">
+    <div className="relative flex h-svh max-h-svh w-full flex-col overflow-hidden">
+      <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
         <section
           id="hero"
           className="w-full px-5 pt-12 pb-6 sm:px-8 sm:pb-6 lg:px-12 lg:pt-16 lg:pb-7"

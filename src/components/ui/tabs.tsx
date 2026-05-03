@@ -16,7 +16,7 @@ function TabsList({ className, ...props }: ComponentProps<typeof TabsPrimitive.L
   return (
     <TabsPrimitive.List
       className={cn(
-        'grid w-full min-w-0 max-w-full grid-cols-2 gap-0 bg-muted/10 sm:grid-cols-4',
+        'grid w-full shrink-0 min-w-0 max-w-full grid-cols-2 gap-0 bg-muted/10 sm:grid-cols-4',
         className,
       )}
       {...props}
@@ -50,7 +50,7 @@ function TabsContent({
   return (
     <TabsPrimitive.Panel
       className={cn(
-        'min-h-[min(42vh,440px)] min-w-0 max-w-full overflow-x-auto bg-[linear-gradient(180deg,oklch(1_0_0/3%)_0%,transparent_48%)] p-4 sm:p-6',
+        'min-w-0 max-w-full overflow-x-hidden bg-[linear-gradient(180deg,oklch(1_0_0/3%)_0%,transparent_48%)] p-4 sm:p-6',
         className,
       )}
       {...props}
