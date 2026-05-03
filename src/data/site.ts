@@ -12,6 +12,8 @@ export type SiteLink = {
 
 export type Patent = {
   title: string
+  inventors: string[]
+  status: 'granted' | 'applied'
   number?: string
   year?: string
   href?: string
@@ -223,7 +225,43 @@ const github: SiteGithub = {
   username: 'white-wizard-2',
 }
 
-const patentsGranted = [] satisfies Patent[]
+const patentsGranted = [
+  {
+    title: 'Synchronising frame decoding in a multi-layer video stream',
+    inventors: [
+      'Andrew Jordan',
+      'Elias Serrano',
+      'Dean Alexandrou',
+      'Vinod Balakrishnan',
+    ],
+    status: 'granted' as const,
+    number: 'US20250159219 A1',
+    year: '2025',
+    href: 'https://patents.google.com/patent/US20250159219A1/en',
+    summary:
+      'Pairs base- and enhancement-layer decoded frames using timing metadata and timestamps when layers are decoded by separate paths (e.g. hardware base + LCEVC), then combines them for output.',
+  },
+  {
+    title: 'Implementing enhancement coding schemes in streaming applications',
+    inventors: ['Fabio Murra', 'Vinod Balakrishnan'],
+    status: 'granted' as const,
+    number: 'EP4696026 A1',
+    year: '2026',
+    href: 'https://patents.google.com/patent/EP4696026A1/en',
+    summary:
+      'Manifest-driven streaming for enhancement-coded media: metadata points to a base representation and associated enhancement-layer segment locations for packaging and client playback.',
+  },
+  {
+    title: 'Rendering of video signals',
+    inventors: ['Vinod Balakrishnan'],
+    status: 'granted' as const,
+    number: 'GB2635736 A',
+    year: '2025',
+    href: 'https://patents.google.com/patent/GB2635736A/en',
+    summary:
+      'Renders base-layer video in an HTML video element and overlays separately decoded residual enhancement streams in a coincident region for higher-quality browser playback.',
+  },
+] satisfies Patent[]
 const patentsApplied = [] satisfies Patent[]
 
 export const site = {

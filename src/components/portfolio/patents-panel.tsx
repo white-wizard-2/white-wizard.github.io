@@ -22,6 +22,11 @@ function GlowCard({ className, ...props }: ComponentProps<typeof Card>) {
   )
 }
 
+const statusBadgeLabel: Record<Patent['status'], string> = {
+  granted: 'Granted',
+  applied: 'Applied',
+}
+
 function PatentGrid({ patents }: { patents: Patent[] }) {
   if (patents.length === 0) {
     return (
@@ -39,6 +44,14 @@ function PatentGrid({ patents }: { patents: Patent[] }) {
           <GlowCard className="h-full">
             <CardHeader>
               <div className="flex flex-wrap items-center gap-2">
+                <Badge
+                  variant={
+                    patent.status === 'granted' ? 'default' : 'secondary'
+                  }
+                  className="font-mono text-[10px] uppercase tracking-wider"
+                >
+                  {statusBadgeLabel[patent.status]}
+                </Badge>
                 {patent.year ? (
                   <Badge variant="secondary">{patent.year}</Badge>
                 ) : null}
@@ -66,6 +79,12 @@ function PatentGrid({ patents }: { patents: Patent[] }) {
                   patent.title
                 )}
               </CardTitle>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                <span className="font-medium text-foreground/90">
+                  Inventors:{' '}
+                </span>
+                {patent.inventors.join(', ')}
+              </p>
               {patent.summary ? (
                 <CardDescription className="text-sm leading-relaxed">
                   {patent.summary}
