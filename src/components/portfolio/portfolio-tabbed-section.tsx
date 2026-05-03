@@ -2,6 +2,7 @@ import type { ComponentProps } from 'react'
 import { ExternalLink } from 'lucide-react'
 import { BlogPostsPanel } from '@/components/portfolio/blog-posts-panel'
 import { ExperienceCareerPanel } from '@/components/portfolio/experience-career-panel'
+import { OpenSourceContributionsPanel } from '@/components/portfolio/open-source-contributions-panel'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -174,29 +175,24 @@ export function PortfolioTabbedSection() {
                   ) : null}
                 </div>
               ) : (
-                <ul className="grid list-none gap-3 p-0">
-                  {site.openSourceContributions.map((item) => (
-                    <li
-                      key={item.href}
-                      className="flex flex-col gap-1 border-b border-border/40 py-3 last:border-0 sm:flex-row sm:items-start sm:justify-between"
+                <div className="space-y-4">
+                  <OpenSourceContributionsPanel
+                    items={site.openSourceContributions}
+                  />
+                  {githubProfileHref ? (
+                    <a
+                      href={githubProfileHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        'inline-flex items-center gap-2 font-mono text-xs tracking-wide text-primary hover:underline',
+                      )}
                     >
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 font-medium text-foreground hover:text-primary"
-                      >
-                        {item.title}
-                        <ExternalLink className="size-3.5 opacity-50 group-hover:opacity-80" />
-                      </a>
-                      {item.context ? (
-                        <span className="max-w-xl font-mono text-xs text-muted-foreground">
-                          {item.context}
-                        </span>
-                      ) : null}
-                    </li>
-                  ))}
-                </ul>
+                      GitHub profile
+                      <ExternalLink className="size-3.5" />
+                    </a>
+                  ) : null}
+                </div>
               )}
             </TabsContent>
           </Tabs>

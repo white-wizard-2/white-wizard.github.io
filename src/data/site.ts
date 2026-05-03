@@ -159,8 +159,54 @@ const blogs = [
 export type OpenSourceContribution = {
   title: string
   href: string
+  kind: 'pull-request' | 'repository'
   context?: string
 }
+
+const openSourceContributions = [
+  {
+    title: 'MPEG-5 Part 2 LCEVC in Shaka Player',
+    href: 'https://github.com/shaka-project/shaka-player/pull/4050',
+    kind: 'pull-request' as const,
+    context:
+      'Integrated MPEG-5 Part 2 LCEVC into Shaka Player for web playback with enhancement decoding.',
+  },
+  {
+    title: 'SEI-based LCEVC decoding in dash.js',
+    href: 'https://github.com/Dash-Industry-Forum/dash.js/pull/4491',
+    kind: 'pull-request' as const,
+    context:
+      'MPEG-5 LCEVC in dash.js using SEI (Supplemental Enhancement Information) carriage, rendered on HTML5 canvas.',
+  },
+  {
+    title: 'Scalable dual-track LCEVC delivery in dash.js',
+    href: 'https://github.com/Dash-Industry-Forum/dash.js/pull/4572',
+    kind: 'pull-request' as const,
+    context:
+      'Scalable implementation of dual-track LCEVC delivery in the DASH reference player.',
+  },
+  {
+    title: 'LCEVCdecJS',
+    href: 'https://github.com/v-novaltd/LCEVCdecJS',
+    kind: 'repository' as const,
+    context:
+      'Maintainer of V-Nova’s MPEG-5 Part 2 LCEVC decoder for web (player integration, Shaka and dash.js demos).',
+  },
+  {
+    title: 'androidx-media (Media3 / ExoPlayer fork)',
+    href: 'https://github.com/v-novaltd/androidx-media',
+    kind: 'repository' as const,
+    context:
+      'Custom MediaCodecAdapter-based integration of LCEVC with Android Jetpack Media3 / ExoPlayer.',
+  },
+  {
+    title: 'Trinetr',
+    href: 'https://github.com/white-wizard-2/trinetr',
+    kind: 'repository' as const,
+    context:
+      'Model visualization and experimentation platform for CNNs, transformers, diffusion, and related architectures.',
+  },
+] satisfies OpenSourceContribution[]
 
 export type Project = {
   name: string
@@ -214,6 +260,6 @@ export const site = {
   experience,
   patents: [] as Patent[],
   blogs,
-  openSourceContributions: [] as OpenSourceContribution[],
+  openSourceContributions,
   projects: [] as Project[],
 }
