@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import {
   fetchContributionsAll,
-  sumContributionsTotal,
   type ContributionDay,
 } from '@/lib/github-contributions-api'
 import { cn } from '@/lib/utils'
@@ -19,54 +18,68 @@ function toLocalISODate(d: Date): string {
   return `${y}-${m}-${day}`
 }
 
-function parseYMD(s: string): Date {
-  const [y, m, d] = s.split('-').map(Number)
-  return new Date(y, m - 1, d)
+type GraphDay = {
+  date: string
+  level: number
+  count: number
+  inSpan: boolean
 }
 
-/** Full timeline from first to last contribution day, padded to Sun–Sat weeks (GitHub-style). */
-function buildFullTimelineWeeks(contributions: ContributionDay[]) {
-  if (contributions.length === 0) return []
-
-  const sorted = [...contributions].sort((a, b) => a.date.localeCompare(b.date))
-  const minD = parseYMD(sorted[0].date)
-  const maxD = parseYMD(sorted[sorted.length - 1].date)
+/** ~53 weeks (GitHub-style): from Sunday 52 weeks before this week through Saturday of the current week; data only through local `now` (today). */
+function buildLast53WeeksWindow(
+  contributions: ContributionDay[],
+  now: Date,
+): {
+  weeks: GraphDay[][]
+  totalInWindow: number
+  totalByYear: Record<string, number>
+} {
   const map = new Map(contributions.map((c) => [c.date, c]))
 
-  const start = new Date(minD)
-  start.setDate(start.getDate() - start.getDay())
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 
-  const end = new Date(maxD)
-  const endDow = end.getDay()
-  if (endDow !== 6) {
-    end.setDate(end.getDate() + (6 - endDow))
-  }
+  const thisWeekSunday = new Date(today)
+  thisWeekSunday.setDate(thisWeekSunday.getDate() - thisWeekSunday.getDay())
 
-  const cells: {
-    date: string
-    level: number
-    count: number
-    inSpan: boolean
-  }[] = []
+  const gridStart = new Date(thisWeekSunday)
+  gridStart.setDate(gridStart.getDate() - 52 * 7)
 
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+  const gridEnd = new Date(thisWeekSunday)
+  gridEnd.setDate(gridEnd.getDate() + 6)
+
+  const cells: GraphDay[] = []
+  let totalInWindow = 0
+  const totalByYear: Record<string, number> = {}
+
+  for (let d = new Date(gridStart); d <= gridEnd; d.setDate(d.getDate() + 1)) {
     const iso = toLocalISODate(d)
-    const inSpan = d >= minD && d <= maxD
+    const inSpan = d <= today
     const entry = map.get(iso)
+    const count = inSpan ? (entry?.count ?? 0) : 0
+    const level = inSpan ? (entry?.level ?? 0) : 0
+
+    if (inSpan) {
+      totalInWindow += count
+      if (count > 0) {
+        const y = String(d.getFullYear())
+        totalByYear[y] = (totalByYear[y] ?? 0) + count
+      }
+    }
+
     cells.push({
       date: iso,
-      level: entry?.level ?? 0,
-      count: entry?.count ?? 0,
+      level,
+      count,
       inSpan,
     })
   }
 
-  const weeks: (typeof cells)[] = []
+  const weeks: GraphDay[][] = []
   for (let i = 0; i < cells.length; i += 7) {
     weeks.push(cells.slice(i, i + 7))
   }
 
-  return weeks
+  return { weeks, totalInWindow, totalByYear }
 }
 
 export type GithubContributionGraphProps = {
@@ -80,15 +93,12 @@ export function GithubContributionGraph({
   className,
   size = 'default',
 }: GithubContributionGraphProps) {
+  const graphScrollRef = useRef<HTMLDivElement>(null)
+
   const [state, setState] = useState<
     | { status: 'loading' }
     | { status: 'error'; message: string }
-    | {
-        status: 'ok'
-        contributions: ContributionDay[]
-        totalByYear: Record<string, number>
-        totalAll: number
-      }
+    | { status: 'ok'; contributions: ContributionDay[] }
   >({ status: 'loading' })
 
   useEffect(() => {
@@ -101,12 +111,9 @@ export function GithubContributionGraph({
       fetchContributionsAll(username, ac.signal)
         .then((res) => {
           if (cancelled) return
-          const totalAll = sumContributionsTotal(res.total)
           setState({
             status: 'ok',
             contributions: res.contributions,
-            totalByYear: res.total,
-            totalAll,
           })
         })
         .catch((err: unknown) => {
@@ -127,22 +134,40 @@ export function GithubContributionGraph({
     }
   }, [username])
 
-  const weeks = useMemo(() => {
-    if (state.status !== 'ok') return []
-    return buildFullTimelineWeeks(state.contributions)
+  const windowGraph = useMemo(() => {
+    if (state.status !== 'ok') return null
+    return buildLast53WeeksWindow(state.contributions, new Date())
   }, [state])
 
-  const cell = size === 'compact' ? 6 : 11
+  const weeks = windowGraph?.weeks ?? []
+  const totalInWindow = windowGraph?.totalInWindow ?? 0
+  const totalByYearWindow = windowGraph?.totalByYear ?? {}
+
+  const cell = size === 'compact' ? 7 : 11
   const gap = size === 'compact' ? 2 : 3
   const cols = weeks.length
   const vbW = cols * (cell + gap) - gap
   const vbH = 7 * (cell + gap) - gap
 
+  useLayoutEffect(() => {
+    if (state.status !== 'ok' || weeks.length === 0) return
+    const el = graphScrollRef.current
+    if (!el) return
+    const snapEnd = () => {
+      el.scrollLeft = el.scrollWidth - el.clientWidth
+    }
+    snapEnd()
+    requestAnimationFrame(snapEnd)
+    const ro = new ResizeObserver(snapEnd)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [state.status, weeks.length, cols, vbW, vbH, size])
+
   const yearSummary =
     state.status === 'ok'
-      ? Object.keys(state.totalByYear)
+      ? Object.keys(totalByYearWindow)
           .sort()
-          .map((y) => `${y}: ${state.totalByYear[y]}`)
+          .map((y) => `${y}: ${totalByYearWindow[y]}`)
           .join(' · ')
       : ''
 
@@ -169,7 +194,7 @@ export function GithubContributionGraph({
           >
             {state.status === 'ok' ? (
               <>
-                <span className="text-[#39d353]">{state.totalAll}</span>
+                <span className="text-[#39d353]">{totalInWindow}</span>
                 <span className="font-normal text-[#8b949e]">
                   {' '}
                   contributions
@@ -203,18 +228,21 @@ export function GithubContributionGraph({
       ) : null}
 
       {state.status === 'ok' && weeks.length > 0 ? (
-        <div className="min-h-0 w-full max-w-full flex-1 overflow-x-auto overflow-y-hidden">
+        <div
+          ref={graphScrollRef}
+          className="min-h-0 w-full max-w-full flex-1 overflow-x-auto overflow-y-hidden [scrollbar-gutter:stable]"
+        >
           <svg
             viewBox={`0 0 ${vbW} ${vbH}`}
             className={cn(
-              'mx-auto block h-auto w-max max-w-none',
+              'mx-auto block max-w-none shrink-0',
               size === 'compact'
-                ? 'max-h-[6.5rem] sm:max-h-[7.5rem]'
-                : 'max-h-[min(42vh,320px)] sm:max-h-[min(48vh,380px)]',
+                ? 'h-[10.8rem] w-auto sm:h-[4.6rem]'
+                : 'h-auto w-max max-h-[min(42vh,320px)] sm:max-h-[min(55vh,580px)]',
             )}
             preserveAspectRatio="xMinYMid meet"
             role="img"
-            aria-label={`Full GitHub contribution timeline for ${username}`}
+            aria-label={`Last 53 weeks of GitHub contributions for ${username}, through today`}
           >
             {weeks.map((week, wi) =>
               week.map((day, di) => {
@@ -287,7 +315,7 @@ export function GithubContributionGraph({
             size === 'compact' ? 'text-[9px]' : 'text-[10px]',
           )}
         >
-          Full timeline · jogruber.de · {REFRESH_MS / 60_000}m refresh
+          Last 53 wks · jogruber.de · {REFRESH_MS / 60_000}m refresh
         </span>
       </div>
     </div>

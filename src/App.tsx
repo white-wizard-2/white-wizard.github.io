@@ -1,6 +1,8 @@
 import type { ComponentProps, ReactNode } from 'react'
 import { ExternalLink } from 'lucide-react'
+import { GithubMark, LinkedinMark, XMark } from '@/components/brand-icons'
 import { GithubContributionGraph } from '@/components/portfolio/github-contribution-graph'
+import { PortfolioTabbedSection } from '@/components/portfolio/portfolio-tabbed-section'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
 import {
@@ -11,7 +13,14 @@ import {
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { site } from '@/data/site'
+import type { SiteLink } from '@/data/site'
 import { cn } from '@/lib/utils'
+
+const linkIcons = {
+  github: GithubMark,
+  linkedin: LinkedinMark,
+  x: XMark,
+} satisfies Record<SiteLink['icon'], typeof GithubMark>
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
@@ -56,7 +65,6 @@ function GlowCard({ className, ...props }: ComponentProps<typeof Card>) {
 }
 
 function App() {
-  const showPatents = site.patents.length > 0
   const showProjects = site.projects.length > 0
 
   return (
@@ -64,11 +72,11 @@ function App() {
       <main className="flex flex-1 flex-col">
         <section
           id="hero"
-          className="w-full px-5 py-12 sm:px-8 lg:px-12 lg:py-16"
+          className="w-full px-5 pt-12 pb-6 sm:px-8 sm:pb-6 lg:px-12 lg:pt-16 lg:pb-7"
           aria-labelledby="hero-heading"
         >
           <div className="mx-auto w-full max-w-[min(100%,2400px)]">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,20%)] lg:items-start lg:gap-10">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(300px,26%)] lg:items-start lg:gap-10">
               {/* Profile: logo left, copy right; full width of column */}
               <div className="flex min-w-0 w-full flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
                 <div className="flex shrink-0 justify-start sm:pt-0.5">
@@ -93,20 +101,26 @@ function App() {
                     {site.identity.about}
                   </p>
                   <div className="flex flex-wrap gap-3">
-                    {site.links.map((link) => (
-                      <a
-                        key={link.href}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn(
-                          buttonVariants({ variant: 'default', size: 'sm' }),
-                        )}
-                      >
-                        <ExternalLink className="size-4" aria-hidden />
-                        {link.label}
-                      </a>
-                    ))}
+                    {site.links.map((link) => {
+                      const Icon = linkIcons[link.icon]
+                      return (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            buttonVariants({ variant: 'default', size: 'sm' }),
+                          )}
+                        >
+                          <Icon
+                            className="size-3.5 shrink-0"
+                            data-icon="inline-start"
+                          />
+                          {link.label}
+                        </a>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
@@ -130,75 +144,7 @@ function App() {
           </div>
         </section>
 
-        {showPatents ? (
-          <section
-            id="patents"
-            className="w-full border-t border-border/50 px-5 py-12 sm:px-8 lg:px-12 lg:py-16"
-            aria-labelledby="patents-heading"
-          >
-            <div className="mx-auto max-w-[1800px]">
-              <SectionLabel>Intellectual property</SectionLabel>
-              <h2
-                id="patents-heading"
-                className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl"
-              >
-                Patents
-              </h2>
-              <p className="mt-3 max-w-2xl text-muted-foreground">
-                Add entries in{' '}
-                <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-xs">
-                  src/data/site.ts
-                </code>
-                .
-              </p>
-              <ul className="mt-8 grid list-none gap-5 p-0 md:grid-cols-2 xl:grid-cols-3">
-                {site.patents.map((patent) => (
-                  <li
-                    key={`${patent.title}-${patent.number ?? patent.year ?? ''}`}
-                  >
-                    <GlowCard className="h-full">
-                      <CardHeader>
-                        <div className="flex flex-wrap items-center gap-2">
-                          {patent.year ? (
-                            <Badge variant="secondary">{patent.year}</Badge>
-                          ) : null}
-                          {patent.number ? (
-                            <Badge variant="outline" className="font-mono text-xs">
-                              {patent.number}
-                            </Badge>
-                          ) : null}
-                        </div>
-                        <CardTitle className="text-lg leading-snug">
-                          {patent.href ? (
-                            <a
-                              href={patent.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-start gap-1.5 underline-offset-4 hover:text-primary hover:underline"
-                            >
-                              {patent.title}
-                              <ExternalLink
-                                className="mt-0.5 size-3.5 shrink-0 opacity-60"
-                                aria-hidden
-                              />
-                            </a>
-                          ) : (
-                            patent.title
-                          )}
-                        </CardTitle>
-                        {patent.summary ? (
-                          <CardDescription className="text-sm leading-relaxed">
-                            {patent.summary}
-                          </CardDescription>
-                        ) : null}
-                      </CardHeader>
-                    </GlowCard>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        ) : null}
+        <PortfolioTabbedSection />
 
         {showProjects ? (
           <section

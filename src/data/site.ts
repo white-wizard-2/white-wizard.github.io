@@ -2,9 +2,12 @@
  * Site content: edit copy and links here.
  * Contribution graph uses `github.username` (see github-contributions-api).
  */
+export type SiteLinkIcon = 'github' | 'linkedin' | 'x'
+
 export type SiteLink = {
   label: string
   href: string
+  icon: SiteLinkIcon
 }
 
 export type Patent = {
@@ -13,6 +16,27 @@ export type Patent = {
   year?: string
   href?: string
   summary?: string
+}
+
+export type ExperienceRow = {
+  title: string
+  organization: string
+  period: string
+  summary?: string
+  href?: string
+}
+
+export type BlogPost = {
+  title: string
+  href: string
+  date?: string
+  summary?: string
+}
+
+export type OpenSourceContribution = {
+  title: string
+  href: string
+  context?: string
 }
 
 export type Project = {
@@ -50,9 +74,23 @@ export const site = {
     {
       label: 'GitHub',
       href: 'https://github.com/white-wizard-2',
+      icon: 'github',
+    },
+    {
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/in/vinod-balakrishnan-82b14868/',
+      icon: 'linkedin',
+    },
+    {
+      label: 'X.com',
+      href: 'https://x.com/whitewizar36161',
+      icon: 'x',
     },
   ] satisfies SiteLink[],
   github,
+  experience: [] as ExperienceRow[],
   patents: [] as Patent[],
+  blogs: [] as BlogPost[],
+  openSourceContributions: [] as OpenSourceContribution[],
   projects: [] as Project[],
 }
