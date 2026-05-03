@@ -124,9 +124,37 @@ const experience = [
 export type BlogPost = {
   title: string
   href: string
+  publisher: string
+  publisherLogoSrc: string
+  imageSrc: string
   date?: string
   summary?: string
 }
+
+const blogs = [
+  {
+    title:
+      'VC-6 AI Blueprint: A Technical Deep Dive into VC-6 Enabled AI Multi-Inference Pipelines',
+    href: 'https://v-nova.com/blog/vc-6-ai-blueprint-a-technical-deep-dive-into-vc-6-enabled-ai-multi-inference-pipelines/',
+    publisher: 'V-Nova',
+    publisherLogoSrc: '/experience/v-nova.jpeg',
+    imageSrc: '/blogs/blog1.png',
+    date: 'Feb 4, 2026',
+    summary:
+      'SMPTE VC-6 in a real-time AI video analytics pipeline: hierarchical decode, shared multi-model inference, and selective ROI refinement from one stream.',
+  },
+  {
+    title:
+      'Build High-Performance Vision AI Pipelines with NVIDIA CUDA-Accelerated VC-6',
+    href: 'https://developer.nvidia.com/blog/build-high-performance-vision-ai-pipelines-with-nvidia-cuda-accelerated-vc-6/',
+    publisher: 'NVIDIA Technical Blog',
+    publisherLogoSrc: '/blogs/nvidia-logo.png',
+    imageSrc: '/blogs/blog2.png',
+    date: 'Sep 11, 2025',
+    summary:
+      'CUDA-accelerated VC-6 decode aligned with GPU parallelism—selective LoQ and RoI fetch, and throughput gains for vision AI workloads.',
+  },
+] satisfies BlogPost[]
 
 export type OpenSourceContribution = {
   title: string
@@ -185,7 +213,7 @@ export const site = {
   github,
   experience,
   patents: [] as Patent[],
-  blogs: [] as BlogPost[],
+  blogs,
   openSourceContributions: [] as OpenSourceContribution[],
   projects: [] as Project[],
 }

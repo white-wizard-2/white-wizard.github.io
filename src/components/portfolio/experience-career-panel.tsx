@@ -20,7 +20,7 @@ function TimelineConnector({ index, total }: { index: number; total: number }) {
 
   return (
     <div
-      className="relative flex h-9 items-center justify-center"
+      className="relative flex h-6 items-center justify-center"
       aria-hidden
     >
       {!isFirst ? (
@@ -47,7 +47,7 @@ function RoleBlock({ role, isFirst }: { role: ExperienceRole; isFirst: boolean }
     <div
       className={cn(
         'space-y-1',
-        !isFirst && 'border-t border-border/80 pt-3',
+        !isFirst && 'border-t border-border/80 pt-2',
       )}
     >
       <CardTitle className="text-xs font-medium leading-snug sm:text-sm">
@@ -75,18 +75,18 @@ function ExperienceColumn({ company }: { company: ExperienceCompany }) {
       size="sm"
       className="flex h-full min-h-0 flex-col gap-0 rounded-none border-0 bg-transparent py-0 text-card-foreground shadow-none ring-0"
     >
-      <CardHeader className="shrink-0 space-y-2 border-b border-border/80 px-3 py-3 text-center [.border-b]:pb-3">
+      <CardHeader className="shrink-0 space-y-1.5 border-b border-border/80 px-2 py-2 text-center [.border-b]:pb-2">
         <img
           src={company.logoSrc}
           alt=""
-          width={48}
-          height={48}
+          width={40}
+          height={40}
           decoding="async"
-          className="mx-auto size-11 rounded-md border border-border bg-background object-contain p-0.5 ring-1 ring-foreground/10"
+          className="mx-auto size-9 rounded-md border border-border bg-background object-contain p-0.5 ring-1 ring-foreground/10"
         />
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <div className="flex flex-wrap items-center justify-center gap-1.5">
-            <CardTitle className="text-sm font-semibold leading-snug">
+            <CardTitle className="text-xs font-semibold leading-snug sm:text-sm">
               {company.name}
             </CardTitle>
             {isCurrent ? (
@@ -102,8 +102,8 @@ function ExperienceColumn({ company }: { company: ExperienceCompany }) {
           ) : null}
         </div>
       </CardHeader>
-      <CardContent className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 py-3">
-        <div className="space-y-3">
+      <CardContent className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 py-2">
+        <div className="space-y-2">
           {company.roles.map((role, i) => (
             <RoleBlock key={`${role.title}-${role.period}`} role={role} isFirst={i === 0} />
           ))}
@@ -125,7 +125,7 @@ export function ExperienceCareerPanel({
     <div className="w-full min-w-0">
       <div
         className={cn(
-          'grid h-[min(56vh,600px)] w-full min-w-0 gap-0 overflow-hidden rounded-xl text-sm',
+          'grid h-[min(38vh,400px)] w-full min-w-0 gap-0 overflow-hidden rounded-xl text-sm',
           surfaceCard,
           'bg-[linear-gradient(180deg,oklch(1_0_0/3%)_0%,transparent_48%)]',
         )}
@@ -138,7 +138,7 @@ export function ExperienceCareerPanel({
           <div
             key={`tl-${company.id}`}
             className={cn(
-              'border-b border-border/80 bg-card/30 px-2',
+              'border-b border-border/80 bg-card/30 px-2 py-1',
               index < n - 1 && 'border-r border-border/80',
             )}
             style={{ gridColumn: index + 1, gridRow: 1 }}

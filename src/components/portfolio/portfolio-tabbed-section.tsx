@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react'
 import { ExternalLink } from 'lucide-react'
+import { BlogPostsPanel } from '@/components/portfolio/blog-posts-panel'
 import { ExperienceCareerPanel } from '@/components/portfolio/experience-career-panel'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -140,32 +141,7 @@ export function PortfolioTabbedSection() {
                   under <code className="font-mono text-[0.7rem]">blogs</code>.
                 </EmptyHint>
               ) : (
-                <ul className="grid list-none gap-3 p-0">
-                  {site.blogs.map((post) => (
-                    <li
-                      key={post.href}
-                      className="flex flex-col gap-1 border-b border-border/40 py-3 last:border-0 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-                    >
-                      <a
-                        href={post.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 font-medium text-foreground hover:text-primary"
-                      >
-                        {post.title}
-                        <ExternalLink className="size-3.5 opacity-50 group-hover:opacity-80" />
-                      </a>
-                      <div className="flex shrink-0 items-center gap-3 font-mono text-xs text-muted-foreground">
-                        {post.date ? <span>{post.date}</span> : null}
-                        {post.summary ? (
-                          <span className="hidden max-w-md truncate sm:inline">
-                            {post.summary}
-                          </span>
-                        ) : null}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                <BlogPostsPanel posts={site.blogs} />
               )}
             </TabsContent>
 
