@@ -2,6 +2,7 @@
  * Site content: edit copy and links here.
  * Contribution graph uses `github.username` (see github-contributions-api).
  */
+import { publicUrl } from '@/lib/public-url'
 export type SiteLinkIcon = 'github' | 'linkedin' | 'x'
 
 export type SiteLink = {
@@ -40,7 +41,7 @@ const experience = [
   {
     id: 'v-nova',
     name: 'V-Nova Ltd.',
-    logoSrc: '/experience/v-nova.jpeg',
+    logoSrc: publicUrl('/experience/v-nova.jpeg'),
     totalTenure: '8 yrs 2 mos',
     roles: [
       {
@@ -67,7 +68,7 @@ const experience = [
   {
     id: 'fastfilmz',
     name: 'fastfilmz',
-    logoSrc: '/experience/fastfilmz.jpeg',
+    logoSrc: publicUrl('/experience/fastfilmz.jpeg'),
     totalTenure: '1 yr 2 mos',
     roles: [
       {
@@ -80,7 +81,7 @@ const experience = [
   {
     id: 'bydesign',
     name: 'ByDesign India Pvt Ltd',
-    logoSrc: '/experience/bydesign.jpeg',
+    logoSrc: publicUrl('/experience/bydesign.jpeg'),
     totalTenure: '2 yrs 3 mos',
     roles: [
       {
@@ -98,7 +99,7 @@ const experience = [
   {
     id: 'lebara',
     name: 'Lebara Limited',
-    logoSrc: '/experience/lebara.jpeg',
+    logoSrc: publicUrl('/experience/lebara.jpeg'),
     totalTenure: '3 mos',
     roles: [
       {
@@ -111,7 +112,7 @@ const experience = [
   {
     id: 'reliance',
     name: 'Reliance Communications',
-    logoSrc: '/experience/reliance_communications.jpeg',
+    logoSrc: publicUrl('/experience/reliance_communications.jpeg'),
     totalTenure: '2 yrs 10 mos',
     roles: [
       {
@@ -139,8 +140,8 @@ const blogs = [
       'VC-6 AI Blueprint: A Technical Deep Dive into VC-6 Enabled AI Multi-Inference Pipelines',
     href: 'https://v-nova.com/blog/vc-6-ai-blueprint-a-technical-deep-dive-into-vc-6-enabled-ai-multi-inference-pipelines/',
     publisher: 'V-Nova',
-    publisherLogoSrc: '/experience/v-nova.jpeg',
-    imageSrc: '/blogs/blog1.png',
+    publisherLogoSrc: publicUrl('/experience/v-nova.jpeg'),
+    imageSrc: publicUrl('/blogs/blog1.png'),
     date: 'Feb 4, 2026',
     summary:
       'SMPTE VC-6 in a real-time AI video analytics pipeline: hierarchical decode, shared multi-model inference, and selective ROI refinement from one stream.',
@@ -150,8 +151,8 @@ const blogs = [
       'Build High-Performance Vision AI Pipelines with NVIDIA CUDA-Accelerated VC-6',
     href: 'https://developer.nvidia.com/blog/build-high-performance-vision-ai-pipelines-with-nvidia-cuda-accelerated-vc-6/',
     publisher: 'NVIDIA Technical Blog',
-    publisherLogoSrc: '/blogs/nvidia-logo.png',
-    imageSrc: '/blogs/blog2.png',
+    publisherLogoSrc: publicUrl('/blogs/nvidia-logo.png'),
+    imageSrc: publicUrl('/blogs/blog2.png'),
     date: 'Sep 11, 2025',
     summary:
       'CUDA-accelerated VC-6 decode aligned with GPU parallelism—selective LoQ and RoI fetch, and throughput gains for vision AI workloads.',
@@ -277,9 +278,9 @@ export const site = {
     about:
       'I love video. I love software. I love learning systems.',
     photo: {
-      src: '/vinod.png',
+      src: publicUrl('/vinod.png'),
       alt: 'Vinod Balakrishnan',
-      mysticSrc: '/whitewizard.jpg',
+      mysticSrc: publicUrl('/whitewizard.jpg'),
     },
   },
   links: [
