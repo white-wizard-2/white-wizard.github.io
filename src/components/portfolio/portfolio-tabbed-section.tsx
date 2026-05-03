@@ -1,30 +1,11 @@
-import type { ComponentProps } from 'react'
 import { ExternalLink } from 'lucide-react'
 import { BlogPostsPanel } from '@/components/portfolio/blog-posts-panel'
 import { ExperienceCareerPanel } from '@/components/portfolio/experience-career-panel'
 import { OpenSourceContributionsPanel } from '@/components/portfolio/open-source-contributions-panel'
-import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { PatentsPanel } from '@/components/portfolio/patents-panel'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { site } from '@/data/site'
 import { cn } from '@/lib/utils'
-
-function GlowCard({ className, ...props }: ComponentProps<typeof Card>) {
-  return (
-    <Card
-      className={cn(
-        'border-border/80 bg-card/60 shadow-[0_0_0_1px_oklch(1_0_0_/_6%)_inset] backdrop-blur-xl transition-[border-color,box-shadow] duration-300 hover:border-primary/35 hover:shadow-[0_0_48px_-16px_oklch(0.78_0.12_195_/_0.35)]',
-        className,
-      )}
-      {...props}
-    />
-  )
-}
 
 function EmptyHint({ children }: { children: React.ReactNode }) {
   return (
@@ -72,63 +53,28 @@ export function PortfolioTabbedSection() {
             </TabsContent>
 
             <TabsContent value="patents">
-              {site.patents.length === 0 ? (
+              {site.patentsGranted.length === 0 &&
+              site.patentsApplied.length === 0 ? (
                 <EmptyHint>
                   Add patents in{' '}
                   <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.7rem] text-foreground">
                     src/data/site.ts
                   </code>{' '}
-                  under <code className="font-mono text-[0.7rem]">patents</code>.
+                  under{' '}
+                  <code className="font-mono text-[0.7rem]">
+                    patentsGranted
+                  </code>{' '}
+                  and{' '}
+                  <code className="font-mono text-[0.7rem]">
+                    patentsApplied
+                  </code>
+                  .
                 </EmptyHint>
               ) : (
-                <ul className="grid list-none gap-4 p-0 md:grid-cols-2 xl:grid-cols-3">
-                  {site.patents.map((patent) => (
-                    <li
-                      key={`${patent.title}-${patent.number ?? patent.year ?? ''}`}
-                    >
-                      <GlowCard className="h-full">
-                        <CardHeader>
-                          <div className="flex flex-wrap items-center gap-2">
-                            {patent.year ? (
-                              <Badge variant="secondary">{patent.year}</Badge>
-                            ) : null}
-                            {patent.number ? (
-                              <Badge
-                                variant="outline"
-                                className="font-mono text-xs"
-                              >
-                                {patent.number}
-                              </Badge>
-                            ) : null}
-                          </div>
-                          <CardTitle className="text-lg leading-snug">
-                            {patent.href ? (
-                              <a
-                                href={patent.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-start gap-1.5 underline-offset-4 hover:text-primary hover:underline"
-                              >
-                                {patent.title}
-                                <ExternalLink
-                                  className="mt-0.5 size-3.5 shrink-0 opacity-60"
-                                  aria-hidden
-                                />
-                              </a>
-                            ) : (
-                              patent.title
-                            )}
-                          </CardTitle>
-                          {patent.summary ? (
-                            <CardDescription className="text-sm leading-relaxed">
-                              {patent.summary}
-                            </CardDescription>
-                          ) : null}
-                        </CardHeader>
-                      </GlowCard>
-                    </li>
-                  ))}
-                </ul>
+                <PatentsPanel
+                  granted={site.patentsGranted}
+                  applied={site.patentsApplied}
+                />
               )}
             </TabsContent>
 

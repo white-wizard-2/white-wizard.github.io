@@ -223,6 +223,9 @@ const github: SiteGithub = {
   username: 'white-wizard-2',
 }
 
+const patentsGranted = [] satisfies Patent[]
+const patentsApplied = [] satisfies Patent[]
+
 export const site = {
   meta: {
     title: 'Vinod Balakrishnan — Portfolio',
@@ -258,7 +261,8 @@ export const site = {
   ] satisfies SiteLink[],
   github,
   experience,
-  patents: [] as Patent[],
+  patentsGranted,
+  patentsApplied,
   blogs,
   openSourceContributions,
   projects: [] as Project[],

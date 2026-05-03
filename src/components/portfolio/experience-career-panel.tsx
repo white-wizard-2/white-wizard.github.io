@@ -125,7 +125,7 @@ export function ExperienceCareerPanel({
     <div className="w-full min-w-0">
       <div
         className={cn(
-          'grid h-[min(38vh,400px)] w-full min-w-0 gap-0 overflow-hidden rounded-xl text-sm',
+          'grid h-[min(46vh,484px)] w-full min-w-0 gap-0 overflow-hidden rounded-xl text-sm',
           surfaceCard,
           'bg-[linear-gradient(180deg,oklch(1_0_0/3%)_0%,transparent_48%)]',
         )}
