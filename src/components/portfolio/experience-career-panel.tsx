@@ -6,92 +6,83 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { ExperienceCompany } from '@/data/site'
+import type { ExperienceCompany, ExperienceRole } from '@/data/site'
 import { cn } from '@/lib/utils'
 
-function CompanyLogo({ src }: { src: string }) {
-  return (
-    <img
-      src={src}
-      alt=""
-      width={56}
-      height={56}
-      decoding="async"
-      className="size-12 shrink-0 rounded-md border border-border bg-background object-contain p-0.5 sm:size-14"
-    />
-  )
-}
+/** Matches GlowCard / workspace cards: border, glass surface, inset highlight */
+const surfaceCard = cn(
+  'border-border/80 bg-card/60 shadow-[0_0_0_1px_oklch(1_0_0_/_6%)_inset] backdrop-blur-xl',
+)
 
-function RoleEntry({
-  role,
-  showTopRule,
-}: {
-  role: ExperienceCompany['roles'][number]
-  showTopRule: boolean
-}) {
-  const metaLine = [role.employmentType, role.period].filter(Boolean).join(' · ')
-  const locationLine = [role.location, role.arrangement].filter(Boolean).join(' · ')
+function RoleBlock({ role, isFirst }: { role: ExperienceRole; isFirst: boolean }) {
+  const detail = [role.employmentType, role.period].filter(Boolean).join(' · ')
+  const where = [role.location, role.arrangement].filter(Boolean).join(' · ')
 
   return (
     <div
       className={cn(
         'space-y-1',
-        showTopRule && 'border-t border-border/70 pt-4',
+        !isFirst && 'border-t border-border/80 pt-3',
       )}
     >
-      <p className="text-sm font-medium leading-snug text-foreground">
+      <CardTitle className="text-xs font-medium leading-snug sm:text-sm">
         {role.title}
-      </p>
-      {metaLine ? (
-        <p className="text-xs leading-relaxed text-muted-foreground">{metaLine}</p>
+      </CardTitle>
+      {detail ? (
+        <p className="font-mono text-[11px] leading-relaxed tracking-wide text-muted-foreground">
+          {detail}
+        </p>
       ) : null}
-      {locationLine ? (
-        <p className="text-xs leading-relaxed text-muted-foreground">{locationLine}</p>
+      {where ? (
+        <p className="font-mono text-[11px] leading-relaxed tracking-wide text-muted-foreground">
+          {where}
+        </p>
       ) : null}
     </div>
   )
 }
 
-function ExperienceCompanyCard({ company }: { company: ExperienceCompany }) {
+function ExperienceColumn({ company }: { company: ExperienceCompany }) {
   const isCurrent = company.roles.some((r) => /\bpresent\b/i.test(r.period))
 
   return (
     <Card
       size="sm"
-      className="border-border/80 bg-card shadow-none ring-1 ring-border/60"
+      className="flex h-full min-h-0 flex-col gap-0 rounded-none border-0 bg-transparent py-0 text-card-foreground shadow-none ring-0"
     >
-      <CardHeader className="border-b border-border/60 pb-3">
-        <div className="flex gap-3 sm:gap-4">
-          <CompanyLogo src={company.logoSrc} />
-          <div className="min-w-0 flex-1 space-y-1.5">
-            <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
-              <div className="min-w-0">
-                <CardTitle className="text-base font-semibold leading-snug sm:text-[1.05rem]">
-                  {company.name}
-                </CardTitle>
-              </div>
-              {isCurrent ? (
-                <Badge variant="secondary" className="shrink-0 text-[10px] font-medium">
-                  Current
-                </Badge>
-              ) : null}
-            </div>
-            {company.totalTenure ? (
-              <CardDescription className="text-xs leading-normal">
-                {company.totalTenure}
-              </CardDescription>
+      <CardHeader className="shrink-0 space-y-2 border-b border-border/80 px-3 py-3 text-center [.border-b]:pb-3">
+        <img
+          src={company.logoSrc}
+          alt=""
+          width={48}
+          height={48}
+          decoding="async"
+          className="mx-auto size-11 rounded-md border border-border bg-background object-contain p-0.5 ring-1 ring-foreground/10"
+        />
+        <div className="space-y-1.5">
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
+            <CardTitle className="text-sm font-semibold leading-snug">
+              {company.name}
+            </CardTitle>
+            {isCurrent ? (
+              <Badge variant="secondary" className="font-mono text-[10px] font-medium">
+                Current
+              </Badge>
             ) : null}
           </div>
+          {company.totalTenure ? (
+            <CardDescription className="font-mono text-xs tracking-wide">
+              {company.totalTenure}
+            </CardDescription>
+          ) : null}
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 pt-4">
-        {company.roles.map((role, index) => (
-          <RoleEntry
-            key={`${role.title}-${role.period}`}
-            role={role}
-            showTopRule={index > 0}
-          />
-        ))}
+      <CardContent className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-3 py-3">
+        <div className="space-y-3">
+          {company.roles.map((role, i) => (
+            <RoleBlock key={`${role.title}-${role.period}`} role={role} isFirst={i === 0} />
+          ))}
+        </div>
       </CardContent>
     </Card>
   )
@@ -102,11 +93,30 @@ export function ExperienceCareerPanel({
 }: {
   companies: ExperienceCompany[]
 }) {
+  const n = companies.length
+  if (n === 0) return null
+
   return (
-    <div className="flex flex-col gap-4">
-      {companies.map((company) => (
-        <ExperienceCompanyCard key={company.id} company={company} />
-      ))}
+    <div className="w-full min-w-0">
+      <div
+        className={cn(
+          'grid h-[min(56vh,600px)] w-full min-w-0 gap-0 overflow-hidden rounded-xl text-sm',
+          surfaceCard,
+          'bg-[linear-gradient(180deg,oklch(1_0_0/3%)_0%,transparent_48%)]',
+        )}
+        style={{
+          gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`,
+        }}
+      >
+        {companies.map((company, index) => (
+          <div
+            key={company.id}
+            className={cn('min-h-0 min-w-0', index < n - 1 && 'border-r border-border/80')}
+          >
+            <ExperienceColumn company={company} />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

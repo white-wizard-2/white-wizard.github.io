@@ -66,6 +66,7 @@ const experience = [
     id: 'fastfilmz',
     name: 'fastfilmz',
     logoSrc: '/experience/fastfilmz.jpeg',
+    totalTenure: '1 yr 2 mos',
     roles: [
       {
         title: 'Engineering Manager',
@@ -96,6 +97,7 @@ const experience = [
     id: 'lebara',
     name: 'Lebara Limited',
     logoSrc: '/experience/lebara.jpeg',
+    totalTenure: '3 mos',
     roles: [
       {
         title: 'OTT SOC Engineer',
@@ -108,6 +110,7 @@ const experience = [
     id: 'reliance',
     name: 'Reliance Communications',
     logoSrc: '/experience/reliance_communications.jpeg',
+    totalTenure: '2 yrs 10 mos',
     roles: [
       {
         title: 'Assistant Manager',
