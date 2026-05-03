@@ -3,7 +3,7 @@
  * Contribution graph uses `github.username` (see github-contributions-api).
  */
 import { publicUrl } from '@/lib/public-url'
-export type SiteLinkIcon = 'github' | 'linkedin' | 'x'
+export type SiteLinkIcon = 'github' | 'linkedin' | 'x' | 'nvidia'
 
 export type SiteLink = {
   label: string
@@ -274,7 +274,7 @@ export const site = {
   identity: {
     name: 'Vinod Balakrishnan',
     moniker: 'White Wizard',
-    headline: 'Software engineer',
+    headline: 'Engineer | Inventor | Builder',
     about:
       'I love video. I love software. I love learning systems.',
     photo: {
@@ -293,6 +293,11 @@ export const site = {
       label: 'LinkedIn',
       href: 'https://www.linkedin.com/in/vinod-balakrishnan-82b14868/',
       icon: 'linkedin',
+    },
+    {
+      label: 'NVIDIA Technical Blog',
+      href: 'https://developer.nvidia.com/blog/author/vinodbalakrishnan/',
+      icon: 'nvidia',
     },
     {
       label: 'X.com',

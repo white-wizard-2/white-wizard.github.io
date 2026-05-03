@@ -1,6 +1,11 @@
-import { useState, type ComponentProps, type ReactNode } from 'react'
+import {
+  useState,
+  type ComponentProps,
+  type ComponentType,
+  type ReactNode,
+} from 'react'
 import { ExternalLink } from 'lucide-react'
-import { GithubMark, LinkedinMark, XMark } from '@/components/brand-icons'
+import { GithubMark, LinkedinMark, NvidiaMark, XMark } from '@/components/brand-icons'
 import { GithubContributionGraph } from '@/components/portfolio/github-contribution-graph'
 import { PortfolioTabbedSection } from '@/components/portfolio/portfolio-tabbed-section'
 import { Badge } from '@/components/ui/badge'
@@ -20,7 +25,8 @@ const linkIcons = {
   github: GithubMark,
   linkedin: LinkedinMark,
   x: XMark,
-} satisfies Record<SiteLink['icon'], typeof GithubMark>
+  nvidia: NvidiaMark,
+} satisfies Record<SiteLink['icon'], ComponentType<{ className?: string }>>
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
