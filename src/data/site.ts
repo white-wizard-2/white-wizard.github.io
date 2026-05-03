@@ -196,6 +196,20 @@ const openSourceContributions = [
       'Maintainer of V-Nova’s MPEG-5 Part 2 LCEVC decoder for web (player integration, Shaka and dash.js demos).',
   },
   {
+    title: 'VC-6 samples',
+    href: 'https://github.com/v-novaltd/vc6-samples',
+    kind: 'repository' as const,
+    context:
+      'Python samples for VC-6 encode and decode on CPU, CUDA, and OpenCL—batch paths, level-of-quality, ROI workflows, and benchmarking.',
+  },
+  {
+    title: 'VC-6 AI Blueprint',
+    href: 'https://github.com/v-novaltd/vc6-ai-blueprint',
+    kind: 'repository' as const,
+    context:
+      'GPU-oriented VC-6 pipeline demo: multi-inference vision (e.g. YOLO, MediaPipe), LOQ and ROI-aware decode, and CustomTkinter UI.',
+  },
+  {
     title: 'androidx-media (Media3 / ExoPlayer fork)',
     href: 'https://github.com/v-novaltd/androidx-media',
     kind: 'repository' as const,
